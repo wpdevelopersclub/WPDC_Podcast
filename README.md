@@ -12,7 +12,7 @@ __License:__ [GPL-2.0+](http://www.gnu.org/licenses/gpl-2.0.html)
 It does requires:
 
 * the Genesis framework.
-* [Core Plugin](https://github.com/wpdevelopersclub/WPDevsClub-Core-Plugin) 
+* [Core Plugin](https://github.com/wpdevelopersclub/WPDC_Core) 
 
 ### Features
 This plugin is fully OOP and utilizes Polymorphism, Inheritance, etc.  It shows you how to build OOP-capable plugins.
