@@ -15,8 +15,23 @@
 
 use WPDevsClub_Core\Support\Base_Template;
 use WPDevsClub_Core\Models\Base as Model;
+use WP_Query;
 
-class Podcast extends Base_Template {
+class Podcast_Landing extends Base_Template {
+
+	/**
+	 * Instance of the Post Model
+	 *
+	 * @var Model
+	 */
+	protected $podcast_model;
+
+	/**
+	 * Podcast's Post ID
+	 *
+	 * @var int
+	 */
+	protected $podcast_id;
 
 	/**************************
 	 * Instantiate & Initialize
@@ -32,15 +47,8 @@ class Podcast extends Base_Template {
 	protected function init_properties() {
 
 		$this->body_classes = array(
-			'wpdevsclub-podcast',
-		);
-
-		$this->config = array(
-			'views'     => array(
-				'main'          => '',
-				'header'        => CHILD_DIR . '/lib/views/podcast/header.php',
-				'section'       => CHILD_DIR . '/lib/views/podcast/section.php',
-			),
+			'wpdevsclub-podcast-landing',
+			'hero-header',
 		);
 	}
 
@@ -53,9 +61,10 @@ class Podcast extends Base_Template {
 	 */
 	protected function init() {
 
-		$this->init_model();
+		$this->init_config();
 
-		$this->init_page_hooks();
+		$this->init_page();
+		add_action( 'genesis_before_loop', array( $this, 'init_grid' ), 20 );
 	}
 
 	/**
@@ -65,36 +74,51 @@ class Podcast extends Base_Template {
 	 *
 	 * @return null
 	 */
-	protected function init_model() {
-
-		$config = array(
-			'meta_keys'                     => array(
-				'wpdevsclub_podcast_sections'  => false,
+	protected function init_config() {
+		$this->config = array(
+			'views'                                 => array(
+				'header'                            => WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/header.php',
+				'section'                           => WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/section.php',
+				'episode'                           => WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/episode.php',
 			),
+			'model'                                 => array(
+				'meta_keys'                         => array(
+					'wpdevsclub_page_options'       => false,
+					'wpdevsclub_podcast_sections'   => false,
+				),
+			),
+			'number_of_sections'                    => 2,
 		);
-
-		$this->model = new Model( $config, $this->post_id );
 	}
 
-	protected function init_page_hooks() {
-		add_action( 'genesis_header',                           array( $this, 'do_header' ) );
-		add_action( 'genesis_after_header',                     'genesis_do_subnav', 15 );
+	/**
+	 * Initialize the Page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return null
+	 */
+	protected function init_page() {
 
-		// Remove primary navigation
+		$this->model = new Model( $this->config['model'], $this->post_id );
+		add_action( 'genesis_header',                           array( $this, 'do_header' ) );
 		remove_action( 'genesis_before_content_sidebar_wrap',   'genesis_do_nav' );
 
+		add_action( 'genesis_before_loop',                      array( $this, 'render_sections') );
 		remove_action( 'genesis_loop',                          'genesis_do_loop' );
-		add_action( 'genesis_loop',                             array( $this, 'render_sections' ) );
-
-		remove_all_actions( 'genesis_entry_content' );
-		remove_all_actions( 'genesis_entry_footer' );
-		remove_all_actions( 'genesis_after_entry' );
 	}
 
+	/**
+	 * Do the hero header
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return null
+	 */
 	public function do_header() {
-		global $post;
-		$content = do_shortcode( $post->post_content );
-		$content = wpautop( $content );
+		$post       = get_post( $this->post_id );
+		$content    = do_shortcode( $post->post_content );
+		$content    = wpautop( $content );
 
 		if ( is_readable( $this->config['views']['header'] ) ) {
 			include( $this->config['views']['header'] );
@@ -110,28 +134,80 @@ class Podcast extends Base_Template {
 	 */
 	public function render_sections() {
 
-		for ( $section = 1; $section <= 5; $section ++ ) {
-			if ( ! $this->model->get_meta( "_section{$section}_content" ) ) {
+		for ( $section = 1; $section <= $this->config['number_of_sections']; $section ++ ) {
+
+			if ( ! $this->model->get_meta( "_section{$section}_content", 'wpdevsclub_podcast_sections' ) ) {
 				continue;
 			}
 
 			$id         = 'home-section-' . $section;
 
-			$class      = $this->model->get_meta( "_section{$section}_class" );
+			$class      = $this->model->get_meta( "_section{$section}_class", 'wpdevsclub_podcast_sections' );
 			$class      = sprintf( 'section-%s home-section%s', $section, $class ? ' ' . $class : '' );
 
-			$content    = do_shortcode( $this->model->get_meta( "_section{$section}_content" ) );
-			$content    = intval( $this->model->get_meta( "_section{$section}_content_wpautop", 0 ) ) ? wpautop( $content ) : $content;
+			$content    = do_shortcode( $this->model->get_meta( "_section{$section}_content", 'wpdevsclub_podcast_sections' ) );
+			$content    = intval( $this->model->get_meta( "_section{$section}_content_wpautop", 'wpdevsclub_podcast_sections', 0 ) ) ? wpautop( $content ) : $content;
 
 			if ( is_readable( $this->config['views']['header'] ) ) {
 				include( $this->config['views']['section'] );
 			}
 		}
 	}
+
+	/**
+	 * Initialize the Grid
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return null
+	 */
+	public function init_grid() {
+		$query_args = array(
+			'post_type' => 'podcast',
+			'paged'     => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
+		);
+
+		$query = new WP_Query( $query_args );
+		if ( $query->have_posts() ) :
+
+			echo '<section class="podcast-episodes">';
+
+			while ( $query->have_posts() ) : $query->the_post();
+				$podcast_id     = get_the_ID();
+				$model          = $this->init_podcast_model( $podcast_id );
+				$content        = wpautop( $model->get_meta( '_tldr', 'wpdevsclub_page_options' ) );
+				$airdate        = $model->get_meta( '_airdate', 'wpdevsclub_podcast' );
+				$upcoming       = wpdevsclub_is_later_than_now( $airdate );
+				$date_format    = $upcoming ? 'g:ia \C\S\T \o\n l jS F' : 'jS F Y';
+
+				$entry_attr     = genesis_attr( 'entry' );
+				$entry_attr     = $upcoming ? str_replace( 'class="', 'class="upcoming ', $entry_attr ) : $entry_attr;
+
+				include ( $this->config['views']['episode'] );
+			endwhile;
+
+			echo '</section>';
+
+			wp_reset_postdata();
+		endif;
+
+	}
+
+	public function init_podcast_model( $post_id ) {
+		return new Model(
+			array(
+				'meta_keys'                         => array(
+					'wpdevsclub_page_options'       => false,
+					'wpdevsclub_podcast'            => false,
+				),
+			),
+			$post_id
+		);
+	}
 }
 
 global $post;
 
-new Podcast( $post->ID );
+new Podcast_Landing( $post->ID );
 
 genesis();

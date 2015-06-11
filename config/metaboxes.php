@@ -41,7 +41,7 @@ return array(
 		 * Metabox config parameters
 		 ****************************/
 
-		'add_page_template' => 'templates/template-podcast.php',
+		'add_page_template' => 'template-podcast.php',
 		'nonce_action'      => 'wpdevsclub_podcast_sections_save',
 		'nonce_name'        => 'wpdevsclub_podcast_sections_nonce',
 

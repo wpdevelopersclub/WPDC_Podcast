@@ -1,3 +1,3 @@
-<section class="home-header-contents">
+<section class="hero-header-contents">
 	<?php echo wp_kses_post( $content ); ?>
 </section>
