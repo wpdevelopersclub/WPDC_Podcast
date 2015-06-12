@@ -140,10 +140,10 @@ class Podcast_Landing extends Base_Template {
 				continue;
 			}
 
-			$id         = 'home-section-' . $section;
+			$id         = 'podcast-section-' . $section;
 
 			$class      = $this->model->get_meta( "_section{$section}_class", 'wpdevsclub_podcast_sections' );
-			$class      = sprintf( 'section-%s home-section%s', $section, $class ? ' ' . $class : '' );
+			$class      = sprintf( 'section-%s podcast-section%s', $section, $class ? ' ' . $class : '' );
 
 			$content    = do_shortcode( $this->model->get_meta( "_section{$section}_content", 'wpdevsclub_podcast_sections' ) );
 			$content    = intval( $this->model->get_meta( "_section{$section}_content_wpautop", 'wpdevsclub_podcast_sections', 0 ) ) ? wpautop( $content ) : $content;
@@ -162,6 +162,8 @@ class Podcast_Landing extends Base_Template {
 	 * @return null
 	 */
 	public function init_grid() {
+		$upcoming_title_shown = $past_shown = false;
+
 		$query_args = array(
 			'post_type' => 'podcast',
 			'paged'     => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
@@ -169,8 +171,6 @@ class Podcast_Landing extends Base_Template {
 
 		$query = new WP_Query( $query_args );
 		if ( $query->have_posts() ) :
-
-			echo '<section class="podcast-episodes">';
 
 			while ( $query->have_posts() ) : $query->the_post();
 				$podcast_id     = get_the_ID();
@@ -184,9 +184,14 @@ class Podcast_Landing extends Base_Template {
 				$entry_attr     = $upcoming ? str_replace( 'class="', 'class="upcoming ', $entry_attr ) : $entry_attr;
 
 				include ( $this->config['views']['episode'] );
-			endwhile;
 
-			echo '</section>';
+				if ( $upcoming && ! $upcoming_title_shown ) {
+					$upcoming_title_shown = true;
+				} elseif ( ! $past_shown ) {
+					$past_shown = true;
+				}
+
+			endwhile;
 
 			wp_reset_postdata();
 		endif;
@@ -194,6 +199,7 @@ class Podcast_Landing extends Base_Template {
 	}
 
 	public function init_podcast_model( $post_id ) {
+
 		return new Model(
 			array(
 				'meta_keys'                         => array(
