@@ -174,6 +174,7 @@ class Podcast_Landing extends Base_Template {
 		if ( $query->have_posts() ) :
 
 			while ( $query->have_posts() ) : $query->the_post();
+
 				$podcast_id     = get_the_ID();
 				$model          = $this->init_podcast_model( $podcast_id );
 				$content        = wpautop( $model->get_meta( '_tldr', 'wpdevsclub_page_options' ) );

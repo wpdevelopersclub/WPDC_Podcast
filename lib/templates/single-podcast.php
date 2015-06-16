@@ -14,10 +14,7 @@
 use WPDevsClub_Core\Support\Base_Template;
 use WPDevsClub_Core\Models\Base as Model;
 use WPDevsClub_Core\Structures\Post\Post_Title;
-use WPDevsClub_Core\Structures\Post\Post;
-use WPDevsClub_Core\Structures\Post\Post_Info;
 use WPDevsClub_Core\Structures\Post\Post_Meta;
-use WPDevsClub_Core\Structures\Related;
 use WPDevsClub_Core\Structures\Comments;
 
 class Single_Podcast extends Base_Template {
@@ -25,6 +22,12 @@ class Single_Podcast extends Base_Template {
 	protected $post_type;
 
 	protected $use_sidebar = false;
+
+	protected $upcoming = false;
+
+	protected $past_episode = false;
+
+	protected $airdate = '';
 
 	/**************************
 	 * Instantiate & Initialize
@@ -185,43 +188,31 @@ class Single_Podcast extends Base_Template {
 	}
 
 	public function render_content() {
+		$now                    = wpdevsclub_get_current_datetime();
+		$raw_airdate            = $this->model->get_meta( '_airdate', 'wpdevsclub_podcast' );
 
-		$raw_airdate    = $this->model->get_meta( '_airdate', 'wpdevsclub_podcast' );
-		$upcoming       = wpdevsclub_is_later_than_now( $raw_airdate );
-		$airdate        = wpdevsclub_format_string_to_datetime( $raw_airdate, $upcoming ? 'g:ia \C\S\T \o\n l jS F' : 'jS F Y' );
+		$this->upcoming         = wpdevsclub_is_later_than_now( $raw_airdate, $now );
+		$this->airdate          = wpdevsclub_format_string_to_datetime( $raw_airdate, $this->upcoming ? 'g:ia \C\S\T \o\n l jS F' : 'jS F Y' );
+		$publish_datetime       = wpdevsclub_add_hours_to_datetime( 1, $raw_airdate );
 
-		if ( $upcoming ) {
-			$view = WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/single/upcoming.php';
-			if ( is_readable( $view ) ) {
-				include( $view );
-			}
-		}
+		$this->past_episode     = $now >= $publish_datetime ? true : false;
 
-		$this->render_video();
-
-		$code_challenge = do_shortcode( $this->model->get_meta( '_code_challenge_content', 'wpdevsclub_podcast' ) );
-		$transcript     = do_shortcode( $this->model->get_meta( '_transcript', 'wpdevsclub_podcast' ) );
-
-		$view = WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/single/podcast.php';
+		$view                   = WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/single/episode.php';
 		if ( is_readable( $view ) ) {
 			include( $view );
 		}
 	}
 
-	/**
-	 * Render the video
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return null
-	 */
-	protected function render_video() {
-		$video_src = $this->model->get_meta( '_video', 'wpdevsclub_podcast', false );
-		if ( false == $video_src ) {
-			return;
+	protected function render_upcoming_episode( $view, $code_challenge ) {
+		if ( is_readable( $view ) ) {
+			include( $view );
 		}
-		$video = sprintf( '[video src="%s" width="853" height="480"]', esc_url( $video_src ) );
-		echo do_shortcode( $video );
+	}
+
+	protected function render_past_episode( $view, $code_challenge ) {
+		if ( is_readable( $view ) ) {
+			include( $view );
+		}
 	}
 
 	/**

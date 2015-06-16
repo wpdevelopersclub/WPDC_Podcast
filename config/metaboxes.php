@@ -86,7 +86,7 @@ return array(
 				'_airdate'                  => 'strip_tags',
 				'_runtime'                  => 'strip_tags',
 
-				'_code_challenge_content'   => 'wp_kses_post',
+				'_code_challenge_content'   => '',
 				'_transcript'               => 'wp_kses_post',
 			),
 		),
