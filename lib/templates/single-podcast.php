@@ -24,6 +24,8 @@ class Single_Podcast extends Base_Template {
 
 	protected $post_type;
 
+	protected $use_sidebar = false;
+
 	/**************************
 	 * Instantiate & Initialize
 	 *************************/
@@ -115,18 +117,24 @@ class Single_Podcast extends Base_Template {
 
 		// Replace the content HTML with this new version to allow
 		// sidebar to be only within the content area.
-		add_filter( 'genesis_attr_podcast-content', 'genesis_attributes_content' );
-		add_action( 'genesis_before_entry',         array( $this, 'main_markup_open' ) );
-		add_action( 'genesis_after_entry',          array( $this, 'main_markup_close' ), 98 );
+		if ( $this->use_sidebar ) {
+			add_filter( 'genesis_attr_podcast-content', 'genesis_attributes_content' );
+			add_action( 'genesis_before_entry', array( $this, 'main_markup_open' ) );
+			add_action( 'genesis_after_entry', array( $this, 'main_markup_close' ), 98 );
 
-		// Remove the content HTML
-		remove_filter( 'genesis_attr_content',      'genesis_attributes_content' );
-		add_filter( 'genesis_markup_content',       function( $pre, $args ) {
-			return true;
-		}, 10, 2 );
-		add_filter( 'genesis_markup_',              function( $pre, $args ) {
-			return '</main>' == $args['html5'] ? true : $pre;
-		}, 10, 2 );
+			// Remove the content HTML
+			remove_filter( 'genesis_attr_content',  'genesis_attributes_content' );
+			add_filter( 'genesis_markup_content', function ( $pre, $args ) {
+				return true;
+			}, 10, 2 );
+			add_filter( 'genesis_markup_', function ( $pre, $args ) {
+				return '</main>' == $args['html5'] ? true : $pre;
+			}, 10, 2 );
+
+		} else {
+			remove_action( 'genesis_before_loop',   'genesis_do_breadcrumbs' );
+			add_action( 'genesis_entry_content',    'genesis_do_breadcrumbs', 1 );
+		}
 
 		add_action( 'genesis_entry_content',        array( $this, 'render_content' ) );
 		remove_action( 'genesis_entry_content',     'genesis_do_post_image', 8 );
@@ -177,7 +185,17 @@ class Single_Podcast extends Base_Template {
 	}
 
 	public function render_content() {
-		global $tonya_debug;
+
+		$raw_airdate    = $this->model->get_meta( '_airdate', 'wpdevsclub_podcast' );
+		$upcoming       = wpdevsclub_is_later_than_now( $raw_airdate );
+		$airdate        = wpdevsclub_format_string_to_datetime( $raw_airdate, $upcoming ? 'g:ia \C\S\T \o\n l jS F' : 'jS F Y' );
+
+		if ( $upcoming ) {
+			$view = WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/single/upcoming.php';
+			if ( is_readable( $view ) ) {
+				include( $view );
+			}
+		}
 
 		$this->render_video();
 
@@ -213,24 +231,6 @@ class Single_Podcast extends Base_Template {
 	 *
 	 * @return null
 	 */
-	protected function init_post_info() {
-
-		$config = array(
-			'views'         => array(
-				'main'      => WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/single/post-info.php',
-			),
-		);
-
-		new Post_Info( $this->model, $config, $this->post_id, 0 );
-	}
-
-	/**
-	 * Initialize the Post Title
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return null
-	 */
 	protected function init_post_meta() {
 		$config = array(
 			'include_comment_link'  => true,
@@ -252,27 +252,6 @@ class Single_Podcast extends Base_Template {
 		);
 
 		do_action( 'wpdevsclub_do_related_articles', $this->model, $this->post_id, $config );
-	}
-
-	public function init_sidebar() {
-
-//		$numnber_of_sponsors_oa = $this->model->get_meta( '_number_sponsor_oa', 'wpdevsclub_podcast' );
-//		$numnber_of_sponsors    = $this->model->get_meta( '_number_sponsor', 'wpdevsclub_podcast' );
-//		$content                = $this->model->get_meta( '_sidebar_content', 'wpdevsclub_podcast' );
-//
-//		$views = array();
-//		if ( $numnber_of_sponsors_oa > 0 ) {
-//			$views['sponsor_oa'] = CHILD_DIR . '/lib/views/sidebar/sponsor/sponsor-oa.php';
-//		}
-//		if ( $numnber_of_sponsors > 0 ) {
-//			$views['sponsor']   = CHILD_DIR . '/lib/views/sidebar/sponsor/sponsor.php';
-//		}
-//		if ( $content ) {
-//			$content            = do_shortcode( stripslashes( $content ) );
-//			$views['content']   = CHILD_DIR . '/lib/views/sidebar/sponsor/content.php';
-//		}
-//
-//		include( CHILD_DIR . '/lib/views/sidebar/sponsors.php' );
 	}
 
 	/**
@@ -319,7 +298,7 @@ class Single_Podcast extends Base_Template {
 		new Comments( $config );
 	}
 }
-$tonya_debug = false;
+
 global $post;
 
 new Single_Podcast( $post->ID );

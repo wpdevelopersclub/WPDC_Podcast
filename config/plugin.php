@@ -14,7 +14,9 @@ return array(
 		'use_tag'                   => false,
 		'use_page_templates'        => true,
 		'templates'                 => array(
-			'template-podcast.php'  => __( 'Podcast', 'wpdevsclub' ),
+			'template-podcast.php'  => __( 'Podcast Landing', 'wpdevsclub' ),
+			'template-page.php'     => __( 'Podcast Page', 'wpdevsclub' ),
+			'template-faq.php'      => __( 'Podcast FAQ', 'wpdevsclub' ),
 		),
 	),
 );

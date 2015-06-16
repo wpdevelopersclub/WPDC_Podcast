@@ -7,4 +7,5 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     'WPDevsClub_Podcast\\Plugin' => $baseDir . '/class-plugin.php',
+    'WPDevsClub_Podcast\\Support\\Base_Template' => $baseDir . '/lib/support/class-template-base.php',
 );

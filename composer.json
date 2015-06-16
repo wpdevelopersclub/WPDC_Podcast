@@ -16,7 +16,9 @@
     },
     "autoload" : {
         "classmap" : [
-            "class-plugin.php"
+            "class-plugin.php",
+
+            "lib/support/class-template-base.php"
         ],
         "files": []
     },

@@ -65,6 +65,7 @@ class Podcast_Landing extends Base_Template {
 
 		$this->init_page();
 		add_action( 'genesis_before_loop', array( $this, 'init_grid' ), 20 );
+		add_action( 'genesis_after_header',     'genesis_do_subnav', 11 );
 	}
 
 	/**

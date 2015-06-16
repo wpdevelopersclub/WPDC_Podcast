@@ -8,7 +8,7 @@
 
 	<time <?php echo genesis_attr( 'entry-time' ); ?>>
 		<i class='fa fa-calendar'></i>
-		<?php esc_html_e( $this->model->get_meta( '_airdate', 'wpdevsclub_podcast' ) ); ?>
+		<?php esc_html_e( $airdate ); ?>
 	</time>
 
 	<?php
