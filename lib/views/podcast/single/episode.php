@@ -40,13 +40,31 @@ if ( false != $video_src ) : ?>
 	?>
 </p>
 
+<section id="podcast-highlights" class="highlights clearfix">
+	<header class="section-header">
+		<i class='fa fa-bullhorn'></i>
+		<h2><?php _e( 'Highlights', 'wpdevsclub' ); ?></h2>
+	</header>
+	<?php
+	$highlights = do_shortcode( $this->model->get_meta( '_highlights', 'wpdevsclub_podcast' ) );
+	echo wpautop( $highlights );
+	?>
+</section>
+
 <section id="code-challenge" class="code-challenge clearfix">
 	<header class="section-header">
 		<i class='fa fa-code'></i>
 		<h2><?php _e( 'Code Challenge', 'wpdevsclub' ); ?></h2>
 	</header>
 	<?php
-	$code_challenge = do_shortcode( $this->model->get_meta( '_code_challenge_content', 'wpdevsclub_podcast' ) );
+	// CHGD 07.07.2015 as SyntaxHighlighter needs to handle it's shortcode separately
+	$code_challenge = $this->model->get_meta( '_code_challenge_content', 'wpdevsclub_podcast' );
+	if ( class_exists( 'SyntaxHighlighter' ) ) {
+		global $SyntaxHighlighter;
+		$code_challenge = $SyntaxHighlighter->parse_shortcodes( $code_challenge );
+	}
+
+	$code_challenge = do_shortcode( $code_challenge );
 	echo wpautop( $code_challenge );
 	?>
 </section>
@@ -60,14 +78,4 @@ if ( false != $video_src ) : ?>
 	<?php the_content(); ?>
 </section>
 
-<section id="transcript" class="transcript clearfix">
-	<header class="section-header">
-		<i class="fa fa-microphone"></i>
-		<h2><?php _e( 'Podcast Show\'s Transcript', 'wpdevsclub' ); ?></h2>
-	</header>
-	<?php
-	$transcript = do_shortcode( $this->model->get_meta( '_transcript', 'wpdevsclub_podcast' ) );
-	echo $transcript ? wpautop( wp_kses_post( $transcript ) ) : sprintf( '<p>%s</p>', __( 'Coming soon...', 'wpdevsclub' ) );
-	?>
-</section>
 <?php endif; ?>

@@ -4,66 +4,12 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "87a07b1105dc42b0f93fa6c5666c217b",
-    "packages": [
-        {
-            "name": "raveren/kint",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/raveren/kint.git",
-                "reference": "74f51addd833af89ebc5360ceec4d6816bd767c0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/raveren/kint/zipball/74f51addd833af89ebc5360ceec4d6816bd767c0",
-                "reference": "74f51addd833af89ebc5360ceec4d6816bd767c0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "Kint.class.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rokas Šleinius",
-                    "homepage": "https://github.com/raveren"
-                },
-                {
-                    "name": "Contributors",
-                    "homepage": "https://github.com/raveren/kint/contributors"
-                }
-            ],
-            "description": "Kint - debugging helper for PHP developers",
-            "homepage": "https://github.com/raveren/kint",
-            "keywords": [
-                "debug",
-                "kint",
-                "php"
-            ],
-            "time": "2015-06-05 12:56:14"
-        }
-    ],
+    "hash": "869f0e2ed12ac231554a01acebfe379e",
+    "packages": [],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "raveren/kint": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

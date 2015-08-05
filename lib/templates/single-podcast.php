@@ -57,12 +57,7 @@ class Single_Podcast extends Base_Template {
 	protected function init() {
 		$this->init_hooks();
 
-		$this->init_model();
-		$this->init_post_title();
-
-		$this->init_post_meta();
-
-		$this->init_comments();
+		$this->init_object_factory();
 	}
 
 	/**
@@ -72,36 +67,12 @@ class Single_Podcast extends Base_Template {
 	 *
 	 * @return null
 	 */
-	protected function init_model() {
+	protected function init_object_factory() {
 
-		$config = array(
-			'meta_keys'                     => array(
-				'wpdevsclub_page_options'   => false,
-				'wpdevsclub_podcast'        => false,
-			),
-		);
-
-		$this->model = new Model( $config, $this->post_id );
-	}
-
-	/**
-	 * Initialize the Post Title
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return null
-	 */
-	protected function init_post_title() {
-		$config = array(
-			'views'         => array(
-				'main'      => CHILD_DIR . '/lib/views/common/post-title.php',
-			),
-			'use_image'     => true,
-			'use_overlay'   => true,
-			'post_args'     => array(),
-		);
-
-		new Post_Title( $this->model, $config, $this->post_id );
+		$this->model = new Model( $this->config['model'], $this->post_id );
+		new Post_Title( $this->model, $this->config['post_title'], $this->post_id );
+		new Post_Meta( $this->config['post_meta'], $this->post_id );
+		new Comments( $this->config['comments'] );
 	}
 
 	/**
@@ -144,16 +115,27 @@ class Single_Podcast extends Base_Template {
 		remove_action( 'genesis_entry_content',     'genesis_do_post_content' );
 
 		add_action( 'genesis_after_content',        array( $this, 'do_sticky_footer' ) );
+
+		// Comments
+		remove_action( 'genesis_after_entry',       'genesis_get_comments_template' );
+		add_action( 'genesis_after_entry',          'genesis_get_comments_template', 99 );
 	}
 
+	/*****************
+	 * Callbacks
+	 ****************/
+
+	/**
+	 * Time to do the sticky footer
+	 *
+	 * @since 1.0.0
+	 *
+	 * @uses action event 'wpdevsclub_do_sticky_footer'
+	 *
+	 * @return null
+	 */
 	public function do_sticky_footer() {
-		$config = array(
-			'theme_locations'   => array(
-				'quick_links'   => 'sticky_footer_podcast_quick_links',
-				'extras'        => 'sticky_footer_podcast_extras',
-			),
-		);
-		do_action( 'wpdevsclub_do_sticky_footer', $this->model, $config, $this->post_id );
+		do_action( 'wpdevsclub_do_sticky_footer', $this->model, $this->config['sticky_footer'], $this->post_id );
 	}
 
 	/**
@@ -203,33 +185,6 @@ class Single_Podcast extends Base_Template {
 		}
 	}
 
-	protected function render_upcoming_episode( $view, $code_challenge ) {
-		if ( is_readable( $view ) ) {
-			include( $view );
-		}
-	}
-
-	protected function render_past_episode( $view, $code_challenge ) {
-		if ( is_readable( $view ) ) {
-			include( $view );
-		}
-	}
-
-	/**
-	 * Initialize the Post Title
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return null
-	 */
-	protected function init_post_meta() {
-		$config = array(
-			'include_comment_link'  => true,
-		);
-
-		new Post_Meta( $config, $this->post_id );
-	}
-
 	/**
 	 * Initialize the Related Articles
 	 *
@@ -238,60 +193,11 @@ class Single_Podcast extends Base_Template {
 	 * @return null
 	 */
 	public function init_related() {
-		$config = array(
-			'post_type'     => array( 'post', 'podcast' ),
-		);
-
-		do_action( 'wpdevsclub_do_related_articles', $this->model, $this->post_id, $config );
-	}
-
-	/**
-	 * Initialize the Post Title
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return null
-	 */
-	protected function init_comments() {
-		$config = array(
-			'views'        => array(
-				'comments' => CHILD_DIR . '/lib/views/comments/comments.php',
-			),
-
-			'labels'                            => array(
-				'title_comments'                => __( 'Share Your Thoughts', 'wpdevsclub' ),
-				'reply_title'                   => __( 'Get the ball rolling', 'wpdevsclub' ),
-				'title_reply_to'                => __( 'Join the Discussion for %s', 'wpdevsclub' ),
-				'reply_title_has_comments'      => __( 'Join the Discussion', 'wpdevsclub' ),
-				'title_reply_to_has_comments'   => __( 'Join the Discussion for %s', 'wpdevsclub' ),
-			),
-
-			'patterns'                          => array(
-				'title_comments'                => '<h3>%s</h3><div class="comment-count"><div class="circle"><span>%d</span></div></div>',
-				'wrap_opener'                   => '<section id="wpdevsclub-comments"><div class="wrap">',
-				'wrap_closer'                   => '</div></section>',
-				'comment_form_field_comment'    => '</div><div class="one-half">%s</div><div class="clearfix"></div>',
-			),
-
-			/****************************
-			 * Extras
-			 **************************/
-
-			'comment_list_args'                 => array(
-				'avatar_size'                   => 64,
-				'reply_text'                    => '<i class="fa fa-reply"></i>',
-			),
-		);
-
-		remove_action( 'genesis_after_entry', 'genesis_get_comments_template' );
-		add_action( 'genesis_after_entry', 'genesis_get_comments_template', 99 );
-
-		new Comments( $config );
+		do_action( 'wpdevsclub_do_related_articles', $this->model, $this->post_id, $this->config['related'] );
 	}
 }
 
-global $post;
-
-new Single_Podcast( $post->ID );
+$config = include( WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'config/templates/single.php' );
+new Single_Podcast( 0, $config );
 
 genesis();

@@ -3,7 +3,7 @@
 $path = trailingslashit( __DIR__ ) . 'podcast-single/';
 
 $views = array(
-	'video', 'challenge', 'transcript',
+	'video', 'highlights', 'challenge', 'transcript',
 );
 
 foreach ( $views as $view_file ) {

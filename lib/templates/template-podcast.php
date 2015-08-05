@@ -6,7 +6,7 @@
  * Podcast
  *
  * @package     WPDevsClub\Templates
- * @since       1.0.0
+ * @since       1.0.1
  * @author      WPDevelopersClub and hellofromTonya
  * @link        http://wpdevelopersclub.com/
  * @license     GNU General Public License 2.0+
@@ -61,35 +61,9 @@ class Podcast_Landing extends Base_Template {
 	 */
 	protected function init() {
 
-		$this->init_config();
-
 		$this->init_page();
 		add_action( 'genesis_before_loop', array( $this, 'init_grid' ), 20 );
 		add_action( 'genesis_after_header',     'genesis_do_subnav', 11 );
-	}
-
-	/**
-	 * Initialize the Model
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return null
-	 */
-	protected function init_config() {
-		$this->config = array(
-			'views'                                 => array(
-				'header'                            => WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/header.php',
-				'section'                           => WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/section.php',
-				'episode'                           => WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'lib/views/podcast/episode.php',
-			),
-			'model'                                 => array(
-				'meta_keys'                         => array(
-					'wpdevsclub_page_options'       => false,
-					'wpdevsclub_podcast_sections'   => false,
-				),
-			),
-			'number_of_sections'                    => 2,
-		);
 	}
 
 	/**
@@ -202,20 +176,11 @@ class Podcast_Landing extends Base_Template {
 
 	public function init_podcast_model( $post_id ) {
 
-		return new Model(
-			array(
-				'meta_keys'                         => array(
-					'wpdevsclub_page_options'       => false,
-					'wpdevsclub_podcast'            => false,
-				),
-			),
-			$post_id
-		);
+		return new Model( $this->config['podcast_model'], $post_id );
 	}
 }
 
-global $post;
-
-new Podcast_Landing( $post->ID );
+$config = include( WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'config/templates/podcast.php' );
+new Podcast_Landing( 0, $config );
 
 genesis();

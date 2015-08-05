@@ -6,7 +6,7 @@
  * Podcast Page
  *
  * @package     WPDevsClub\Templates
- * @since       1.0.0
+ * @since       1.0.1
  * @author      WPDevelopersClub and hellofromTonya
  * @link        http://wpdevelopersclub.com/
  * @license     GNU General Public License 2.0+
@@ -22,14 +22,7 @@ class Podcast_Page extends Base_Template {
 	}
 }
 
-global $post;
-
-$config = array(
-	'body_classes'  => array(
-		'wpdevsclub-podcast-page',
-	),
-);
-
-new Podcast_Page( $post->ID, $config );
+$config = include( WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'config/templates/page.php' );
+new Podcast_Page( 0, $config );
 
 genesis();

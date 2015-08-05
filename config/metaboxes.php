@@ -77,7 +77,7 @@ return array(
 				'_video'                    => '',
 				'_airdate'                  => '',
 				'_runtime'                  => '',
-
+				'_highlights'               => '',
 				'_code_challenge_content'   => '',
 				'_transcript'               => '',
 			),
@@ -85,7 +85,7 @@ return array(
 				'_video'                    => 'strip_tags',
 				'_airdate'                  => 'strip_tags',
 				'_runtime'                  => 'strip_tags',
-
+				'_highlights'               => 'wp_kses_post',
 				'_code_challenge_content'   => '',
 				'_transcript'               => 'wp_kses_post',
 			),
