@@ -23,6 +23,6 @@ class Podcast_Page extends Base_Template {
 }
 
 $config = include( WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'config/templates/page.php' );
-new Podcast_Page( 0, $config );
+new Podcast_Page( $config );
 
 genesis();

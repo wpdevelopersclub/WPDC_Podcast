@@ -198,6 +198,6 @@ class Single_Podcast extends Base_Template {
 }
 
 $config = include( WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'config/templates/single.php' );
-new Single_Podcast( 0, $config );
+new Single_Podcast( $config );
 
 genesis();

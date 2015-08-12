@@ -28,6 +28,6 @@ class Podcast_FAQ extends Base_Template {
 }
 
 $config = include( WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'config/templates/faq.php' );
-new Podcast_FAQ( 0, $config );
+new Podcast_FAQ( $config );
 
 genesis();

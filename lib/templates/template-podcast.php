@@ -181,6 +181,6 @@ class Podcast_Landing extends Base_Template {
 }
 
 $config = include( WPDEVSCLUB_PODCAST_PLUGIN_DIR . 'config/templates/podcast.php' );
-new Podcast_Landing( 0, $config );
+new Podcast_Landing( $config );
 
 genesis();

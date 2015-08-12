@@ -3,17 +3,17 @@
 /**
  * WP Developers Club Podcast
  *
- * @package     WPDevsClub_Podcast
- * @author      WPDevelopersClub and hellofromTonya
- * @license     GPL-2.0+
- * @link        http://wpdevelopersclub.com/
- * @copyright   2015 WP Developers Club
+ * @package         WPDevsClub_Podcast
+ * @author          WPDevelopersClub and hellofromTonya
+ * @license         GPL-2.0+
+ * @link            http://wpdevelopersclub.com/
+ * @copyright       2015 WP Developers Club
  *
  * @wordpress-plugin
  * Plugin Name:     WP Developers Club Podcast
  * Plugin URI:      http://wpdevelopersclub.com/
  * Description:     Bring the podcast to this site.
- * Version:         1.0.5
+ * Version:         1.0.7
  * Author:          WP Developers Club and Tonya
  * Author URI:      http://wpdevelopersclub.com
  * Text Domain:     wpdevsclub
@@ -57,18 +57,32 @@ if ( ! defined( 'WPDEVSCLUB_PODCAST_PLUGIN_URL' ) ) {
 require_once( __DIR__ . '/assets/vendor/autoload.php' );
 
 if ( version_compare( $GLOBALS['wp_version'], Plugin::MIN_WP_VERSION, '>' ) ) {
+	init_hooks();
+}
+
+/**
+ * Initialize the plugin hooks
+ *
+ * @since 1.0.0
+ *
+ * @return null
+ */
+function init_hooks() {
+	register_activation_hook( __FILE__, 'wpdevsclub_flush_rewrites' );
+	register_deactivation_hook( __FILE__, 'wpdevsclub_flush_rewrites' );
 
 	add_action( 'plugins_loaded', __NAMESPACE__ . '\\launch', 20 );
-	/**
-	 * Launch the plugin
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return null
-	 */
-	function launch() {
-		$config = wpdevsclub_load_config( 'plugin.php', WPDEVSCLUB_PODCAST_PLUGIN_DIR . '/config/' );
+}
 
-		new Plugin( $config );
-	}
+/**
+ * Launch the plugin
+ *
+ * @since 1.0.0
+ *
+ * @return null
+ */
+function launch() {
+	$config = wpdevsclub_load_config( 'plugin.php', WPDEVSCLUB_PODCAST_PLUGIN_DIR . '/config/' );
+
+	new Plugin( $config );
 }
