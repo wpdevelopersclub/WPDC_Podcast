@@ -40,6 +40,7 @@ return array(
 		'body_classes'              => array(
 			'wpdevsclub-podcast-landing',
 			'hero-header',
+			'header-full-background-image',
 		),
 		'config' => new Arr_Config(
 			array(
