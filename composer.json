@@ -16,9 +16,11 @@
     },
     "autoload" : {
         "classmap" : [
-            "class-plugin.php",
+            "class-podcast.php",
 
-            "lib/support/class-template-base.php"
+            "src/template-classes/class-page.php",
+            "src/template-classes/class-podcast-landing.php",
+            "src/template-classes/class-single.php"
         ],
         "files": []
     },

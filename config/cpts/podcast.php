@@ -18,11 +18,11 @@ return array(
 	),
 	'columns_filter'        => array(
 		'cb'    	        => true,
-		'title' 	        => __( 'Show Title', 'wpdevsclub' ),
-		'cat'               => __( 'Categories', 'wpdevsclub' ),
-		'tags'              => __( 'Tags', 'wpdevsclub' ),
-		'author' 	        => __( 'Author', 'wpdevsclub' ),
-		'date'		        => __( 'Date', 'wpdevsclub' ),
+		'title' 	        => __( 'Show Title', 'wpdc' ),
+		'cat'               => __( 'Categories', 'wpdc' ),
+		'tags'              => __( 'Tags', 'wpdc' ),
+		'author' 	        => __( 'Author', 'wpdc' ),
+		'date'		        => __( 'Date', 'wpdc' ),
 	),
 	'columns_data'          => array(
 		'cat'               => array(

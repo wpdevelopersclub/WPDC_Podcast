@@ -1,21 +1,21 @@
-<?php namespace WPDevsClub_Podcast;
+<?php namespace WPDC_Podcast;
 
 /**
  * WP Developers Club Podcast
  *
- * @package         WPDevsClub_Podcast
+ * @package         WPDC_Podcast
  * @author          WPDevelopersClub and hellofromTonya
  * @license         GPL-2.0+
- * @link            http://wpdevelopersclub.com/
+ * @link            https://wpdevelopersclub.com/
  * @copyright       2015 WP Developers Club
  *
  * @wordpress-plugin
  * Plugin Name:     WP Developers Club Podcast
- * Plugin URI:      http://wpdevelopersclub.com/
+ * Plugin URI:      https://wpdevelopersclub.com/
  * Description:     Bring the podcast to this site.
- * Version:         1.0.7
+ * Version:         1.1.0
  * Author:          WP Developers Club and Tonya
- * Author URI:      http://wpdevelopersclub.com
+ * Author URI:      https://wpdevelopersclub.com
  * Text Domain:     wpdevsclub
  * Requires WP:     3.5
  * Requires PHP:    5.4
@@ -37,26 +37,28 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+use WPDevsClub_Core\Config\Factory;
+
 // Oh no you don't. Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit( 'Cheating&#8217; uh?' );
 }
 
-if ( ! defined( 'WPDEVSCLUB_PODCAST_PLUGIN_DIR' ) ) {
-	define( 'WPDEVSCLUB_PODCAST_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'WPDC_PODCAST_PLUGIN_DIR' ) ) {
+	define( 'WPDC_PODCAST_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
 
-if ( ! defined( 'WPDEVSCLUB_PODCAST_PLUGIN_URL' ) ) {
+if ( ! defined( 'WPDC_PODCAST_PLUGIN_URL' ) ) {
 	$plugin_url = plugin_dir_url( __FILE__ );
 	if ( is_ssl() ) {
 		$plugin_url = str_replace( 'http://', 'https://', $plugin_url );
 	}
-	define( 'WPDEVSCLUB_PODCAST_PLUGIN_URL', $plugin_url );
+	define( 'WPDC_PODCAST_PLUGIN_URL', $plugin_url );
 }
 
 require_once( __DIR__ . '/assets/vendor/autoload.php' );
 
-if ( version_compare( $GLOBALS['wp_version'], Plugin::MIN_WP_VERSION, '>' ) ) {
+if ( version_compare( $GLOBALS['wp_version'], Podcast::MIN_WP_VERSION, '>' ) ) {
 	init_hooks();
 }
 
@@ -77,12 +79,15 @@ function init_hooks() {
 /**
  * Launch the plugin
  *
- * @since 1.0.0
+ * @since 1.1.0
  *
  * @return null
  */
 function launch() {
-	$config = wpdevsclub_load_config( 'plugin.php', WPDEVSCLUB_PODCAST_PLUGIN_DIR . '/config/' );
-
-	new Plugin( $config );
+	new Podcast( Factory::create( WPDC_PODCAST_PLUGIN_DIR . 'config/plugin.php' ) );
 }
+
+add_action( 'wpdevsclub_do_service_providers', function( $core ) {
+	$core['podcast.dir'] = WPDC_PODCAST_PLUGIN_DIR;
+	$core['podcast.url'] = WPDC_PODCAST_PLUGIN_URL;
+} );

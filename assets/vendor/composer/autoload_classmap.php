@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
-    'WPDevsClub_Podcast\\Plugin' => $baseDir . '/class-plugin.php',
-    'WPDevsClub_Podcast\\Support\\Base_Template' => $baseDir . '/lib/support/class-template-base.php',
+    'WPDC_Podcast\\Podcast' => $baseDir . '/class-podcast.php',
+    'WPDC_Podcast\\Templates_Classes\\Page' => $baseDir . '/src/template-classes/class-page.php',
+    'WPDC_Podcast\\Templates_Classes\\Podcast_Landing' => $baseDir . '/src/template-classes/class-podcast-landing.php',
+    'WPDC_Podcast\\Templates_Classes\\Single' => $baseDir . '/src/template-classes/class-single.php',
 );
