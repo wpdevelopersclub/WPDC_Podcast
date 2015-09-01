@@ -29,6 +29,7 @@ return array(
 			'upcoming'      => 'g:ia \C\S\T \o\n l jS F',
 			'past'          => 'jS F Y',
 		),
+		'related.post_type' => array( 'podcast' ),
 		'config'            => new Arr_Config(
 			array(
 				'model'                             => array(
@@ -82,7 +83,13 @@ return array(
 				),
 
 				'related'               => array(
-					'post_type'         => array( 'post', 'podcast' ),
+					'post_type'         => array( 'podcast' ),
+					'post_info'         => array(
+						'views'         => array(
+							'main'      => WPDC_RELATED_ARTICLES_DIR . 'src/views/post-info.php',
+						),
+						'avatar_size'   => 32,
+					),
 				),
 				'sticky_footer'         => array(
 					'theme_locations'   => array(

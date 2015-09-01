@@ -16,9 +16,13 @@ use WPDC_Podcast\Templates_Classes\Single;
 use WPDevsClub_Core\Config\Factory;
 
 $core = Core::getCore();
-new Single(
-	Factory::create( WPDC_PODCAST_PLUGIN_DIR . 'config/templates/single.php', $core['core_service_providers_dir'] . 'single.php' ),
-	$core
+
+$config = Factory::create( WPDC_PODCAST_PLUGIN_DIR . 'config/templates/single.php', $core['core_service_providers_dir'] . 'single.php' );
+
+do_action( 'wpdevclub_setup_related_articles',
+	Factory::create( $config->initial_parameters['config']['related'], $core['related.config.plugin'] )
 );
+
+new Single( $config, $core );
 
 genesis();

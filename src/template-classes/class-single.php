@@ -125,8 +125,6 @@ class Single extends Template {
 	 * @return null
 	 */
 	public function init_related() {
-		// TODO-Tonya Re-enable this once Related is done
-		return;
 		do_action( 'wpdevsclub_do_related_articles',
 			$this->core['single.config.related'],
 			$this->core['model'],
