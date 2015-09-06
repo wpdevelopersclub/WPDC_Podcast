@@ -13,7 +13,7 @@
  * Plugin Name:     WP Developers Club Podcast
  * Plugin URI:      https://wpdevelopersclub.com/
  * Description:     Bring the podcast to this site.
- * Version:         1.1.0
+ * Version:         1.1.1
  * Author:          WP Developers Club and Tonya
  * Author URI:      https://wpdevelopersclub.com
  * Text Domain:     wpdevsclub

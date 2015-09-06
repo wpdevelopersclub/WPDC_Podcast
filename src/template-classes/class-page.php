@@ -27,7 +27,7 @@ class Page extends Template {
 	 * @return null
 	 */
 	protected function init_child_events() {
-		add_action( 'genesis_after_header',     'genesis_do_subnav', 11 );
+		add_action( 'genesis_after_header', 'genesis_do_subnav', 11 );
 		if ( $this->core->has( 'config.sticky_footer' ) ) {
 			add_action( 'genesis_after_content', array( $this, 'do_sticky_footer' ) );
 		}

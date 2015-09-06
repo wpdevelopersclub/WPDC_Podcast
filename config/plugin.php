@@ -4,11 +4,10 @@
  * Runtime Configuration file.
  *
  * @package     WPDC_Podcast
- * @since       1.0.0
+ * @since       1.1.1
  * @author      WPDevelopersClub, hellofromTonya, Alain Schlesser, Gary Jones
  * @link        https://wpdevelopersclub.com/
  * @license     GNU General Public License 2.0+
- * @copyright   2015 WP Developers Club
  */
 
 use WPDevsClub_Core\Config\Arr_Config;
@@ -49,13 +48,23 @@ return array(
 		'podcast.metabox.podcast' => array(
 			'autoload'          => true,
 			'concrete'          => function( $container ) {
-				return new Metabox( new Arr_Config( $container['podcast_config_dir'] . 'metaboxes/podcast.php' ) );
+				return new Metabox(
+					new Arr_Config(
+						$container['podcast_config_dir'] . 'metaboxes/podcast.php',
+						$container['core_config_defaults_dir'] . 'metabox.php'
+					)
+				);
 			},
 		),
 		'podcast.metabox.podcast_single' => array(
 			'autoload'          => true,
 			'concrete'          => function( $container ) {
-				return new Metabox( new Arr_Config( $container['podcast_config_dir'] . 'metaboxes/podcast-single.php' ) );
+				return new Metabox(
+					new Arr_Config(
+						$container['podcast_config_dir'] . 'metaboxes/podcast-single.php',
+						$container['core_config_defaults_dir'] . 'metabox.php'
+					)
+				);
 			},
 		),
 	),
