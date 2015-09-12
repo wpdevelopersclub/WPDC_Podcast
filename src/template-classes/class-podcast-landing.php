@@ -82,19 +82,21 @@ class Podcast_Landing extends Template {
 	/**
 	 * Render the content's HTML
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.1
 	 *
 	 * @return null
 	 */
 	public function do_the_grid() {
-		$query = new WP_Query( $this->core['config']['podcast_query_args'] );
-		if ( $query->have_posts() ) :
-			while ( $query->have_posts() ) : $query->the_post();
+		global $wp_query;
+		$wp_query = new WP_Query( $this->core['config']['podcast_query_args'] );
+
+		if ( have_posts() ) :
+			while ( have_posts() ) : the_post();
 				$this->render_podcast();
 				$this->is_new_section = false;
 			endwhile;
-
-			wp_reset_postdata();
+			genesis_numeric_posts_nav();
+			wp_reset_query();
 		endif;
 	}
 
@@ -112,14 +114,14 @@ class Podcast_Landing extends Template {
 	/**
 	 * Time to do the sticky footer
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.1
 	 *
 	 * @uses action event 'wpdevsclub_do_sticky_footer'
 	 *
 	 * @return null
 	 */
 	public function do_sticky_footer() {
-		do_action( 'wpdevsclub_do_sticky_footer', $this->core['model'], $this->config['sticky_footer'], $this->core['post_id'] );
+		do_action( 'wpdevsclub_do_sticky_footer', $this->core['model'], $this->config['sticky_footer'], $this->core['post_id'], $this->core );
 	}
 
 	/*****************

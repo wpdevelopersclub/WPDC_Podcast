@@ -4,7 +4,7 @@
  * Podcast Plugin
  *
  * @package     WPDC_Podcast
- * @since       1.1.1
+ * @since       1.1.2
  * @author      WPDevelopersClub and hellofromTonya
  * @link        https://wpdevelopersclub.com/
  * @license     GNU General Public License 2.0+
@@ -25,7 +25,7 @@ final class Podcast extends Addon {
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.1.1';
+	const VERSION = '1.1.2';
 
 	/**
 	 * The plugin's minimum WordPress requirement
