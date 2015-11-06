@@ -147,7 +147,7 @@ class Podcast_Landing extends Template {
 	/**
 	 * Fetch the model out of the Container
 	 *
-	 * @since 1.0.0
+	 * @since 2.0.1
 	 *
 	 * @return I_Model
 	 */
@@ -166,12 +166,12 @@ class Podcast_Landing extends Template {
 	 */
 	protected function fetch_dates( I_Model &$model ) {
 		$this->airdate              = $model->get_meta( '_airdate', 'wpdevsclub_podcast' );
+		$this->is_upcoming_episode  = wpdevsclub_is_later_than_now( $this->airdate );
 		$this->formatted_airdate    = wpdevsclub_format_string_to_datetime(
 			$this->airdate,
 			$this->is_upcoming_episode ? $this->core['date_formats']['upcoming'] : $this->core['date_formats']['past']
 		);
 
-		$this->is_upcoming_episode  = wpdevsclub_is_later_than_now( $this->airdate );
 		$this->is_ok_to_display_new_section();
 		$this->is_past_episode      = ! $this->is_upcoming_episode;
 	}

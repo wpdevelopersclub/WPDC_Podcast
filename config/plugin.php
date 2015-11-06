@@ -45,7 +45,7 @@ return array(
 	 ********************************************************/
 
 	'be_service_providers'      => array(
-		'podcast.metabox.podcast' => array(
+		'metabox.podcast.podcast' => array(
 			'autoload'          => true,
 			'concrete'          => function( $container ) {
 				return new Metabox(
@@ -56,7 +56,7 @@ return array(
 				);
 			},
 		),
-		'podcast.metabox.podcast_single' => array(
+		'metabox.podcast.podcast_single' => array(
 			'autoload'          => true,
 			'concrete'          => function( $container ) {
 				return new Metabox(
@@ -119,5 +119,15 @@ return array(
 				);
 			},
 		),
+	),
+
+	/*********************************************************
+	 * Extra Configuration Parameters -
+	 * These are not loaded into the Container.
+	 ********************************************************/
+
+	'metaboxes' => array(
+		'metabox.podcast.podcast',
+		'metabox.podcast.podcast_single',
 	),
 );

@@ -8,7 +8,7 @@
  * @package     WPDC_Podcast\Templates
  * @since       1.0.1
  * @author      WPDevelopersClub and hellofromTonya
- * @link        http://wpdevelopersclub.com/
+ * @link        https://wpdevelopersclub.com/
  * @license     GNU General Public License 2.0+
  * @copyright   2015 WP Developers Club
  */

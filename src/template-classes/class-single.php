@@ -99,19 +99,20 @@ class Single extends Template {
 	/**
 	 * Fetch the episodes dates
 	 *
-	 * @since 1.0.0
+	 * @since 2.0.1
 	 *
 	 * @return null
 	 */
 	protected function fetch_dates() {
 		$now                        = wpdevsclub_get_current_datetime();
 		$this->airdate              = $this->get_meta( '_airdate', 'wpdevsclub_podcast' );
+		$this->is_upcoming_episode  = wpdevsclub_is_later_than_now( $this->airdate, $now );
+		
 		$this->formatted_airdate    = wpdevsclub_format_string_to_datetime(
 			$this->airdate,
 			$this->is_upcoming_episode ? $this->core['date_formats']['upcoming'] : $this->core['date_formats']['past']
 		);
 
-		$this->is_upcoming_episode  = wpdevsclub_is_later_than_now( $this->airdate, $now );
 		$this->is_past_episode      = $now >= wpdevsclub_add_hours_to_datetime( 1, $this->airdate ) ? true : false;
 	}
 

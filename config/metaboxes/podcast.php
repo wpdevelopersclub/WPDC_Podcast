@@ -4,7 +4,7 @@
  * Podcast Metabox Configuration
  *
  * @package     WPDC_Podcast
- * @since       1.1.0
+ * @since       1.1.1
  * @author      WPDevelopersClub, hellofromTonya, Alain Schlesser, Gary Jones
  * @link        https://wpdevelopersclub.com/
  * @license     GNU General Public License 2.0+
@@ -43,7 +43,7 @@ return array(
 	 ****************************/
 
 	'limit_to_template'  => array(
-		'template' => 'templates/template-podcast.php',
+		'template' => 'template-podcast.php',
 		'screen'   => array( 'page' ),
 	),
 	'nonce_action'       => 'wpdevsclub_podcast_sections_save',

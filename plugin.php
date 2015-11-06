@@ -15,7 +15,7 @@
  * Description:     Bring the podcast to this site.
  * Version:         1.1.2
  * Author:          WP Developers Club and Tonya
- * Author URI:      https://wpdevelopersclub.com
+ * Author URI:      https://wpdc.dev
  * Text Domain:     wpdevsclub
  * Requires WP:     3.5
  * Requires PHP:    5.4

@@ -3,12 +3,12 @@
     "description" 	: "WP Developers Club Podcast Plugin",
     "type"          : "project",
     "keywords" 		: ["wordpress", "theme", "wp", "plugin"],
-    "homepage" 		: "http://wpdevelopersclub.com",
+    "homepage" 		: "http://wpdc.dev",
     "license" 		: "GPL-2.0+",
     "authors": [
         {
             "name" 	: "Tonya",
-            "email" : "hello@wpdevelopersclub.com"
+            "email" : "hello@wpdc.dev"
         }
     ],
     "require": {
